@@ -1,7 +1,11 @@
 var Player = {
+    // preload : function() {
+    //     game.load.spritesheet('ship', 'img/ship64x64x5.png', 64, 64, 5);
+    //     game.load.spritesheet('ship2', 'newship264x64x5.png', 64, 64, 5);
+    // },
     tagList : {
         changeParameter : [
-            "maxHealth", "evasion", "speed", "image", "invincibleTime", "healthUp"
+            "maxHealth", "evasion", "speed", "image", "invincibleTime", "healthUp", "isInvincible"
         ],
         changeFunction : [
             "animation"
@@ -17,12 +21,11 @@ var Player = {
 
         this.healthGroup = game.add.group();
         for (var i = this.info.maxHealth-1; i >= 0; i--) {
-            var ship = this.healthGroup.create(game.world.width - 150 + (60 * i), 60, this.info.image);
-            ship.anchor.setTo(0.5, 0.5);
-            ship.angle = 0;
-            ship.alpha = 0.4;
+            var health = this.healthGroup.create(game.world.width - 150 + (60 * i), 60, 'heart');
+            health.anchor.setTo(0.5, 0.5);
+            health.angle = 0;
         }
-        game.add.text(game.world.width - 100, 10, 'Health: ', { font: '24px Arial', fill: '#fff' });
+        game.add.text(game.world.width - 190, 10, 'Health: ', { font: '20px Arial', fill: '#fff' });
 
         this.sprite = game.add.sprite(150, 300, this.info.image);
         game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
@@ -36,11 +39,19 @@ var Player = {
     },
 
     initalizeInfo : function(){
-        this.info.image = 'ship';
+        if(shiptype==1)
+            this.info.image = 'ship';
+        else if(shiptype==2)
+            this.info.image = 'ship2';
+        else if(shiptype==3)
+            this.info.image = 'ship3';
+        else
+            this.info.image = 'ship4';
         this.info.speed = 200;
         this.info.maxHealth = 3;
         this.info.evasion = 0; // 0~100까지의 숫자로 풀레이어의 총알 회피 확률을 나타냄
         this.info.invincibleTime = 0;
+        this.info.isInvincible = false;
         this.info.animation = function(obj){
             obj.animations.add('up', [3, 4], 2, false);
             obj.animations.add('down', [0, 1], 2, false);
